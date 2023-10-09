@@ -28,23 +28,26 @@ export const Nav=()=>{
 
     const searchInput=(e)=>{
         var search=e.target.value
-        if(search.length>0){
-            if(search %1 === 0){
+        if(search.length>0){ 
+            if(search %1 !== 0){
                 setInvalidinput(false)
                 setSearchFound(true)
 
-                fetch(`https://api.tvmaze.com/episodes/${search}`)
-                    .then(response => {
-                        return response.json()
-                    })
-                    .then(data => {
+                fetch(`https://api.tvmaze.com/singlesearch/shows?q=${search}`)
+                .then(response => {
+                    return response.json()
+                })
+                .then(data => {
+                    if(data !== null){
                         setSearchArray([data])
                         setSearchobject(data)
-                    })
-            }
-            else if(search %1 !== 0){
-                setInvalidinput(true)
-                setModalbox(true)
+                        console.log(data)
+                    }
+                    else{
+                        setInvalidinput(true)
+                        setSearchFound(false)
+                    }
+                })
             }
             else{
                 setInvalidinput(true)
@@ -79,6 +82,11 @@ export const Nav=()=>{
         pageRender(`/details`)
     }
 
+    const DetailsSearch=()=>{
+        dispatch(updateDetailPage([searchObject]))  
+        pageRender(`/details`)
+    }
+
     return(
         <>
             <Box sx={{ flexGrow: 1 }}>
@@ -98,7 +106,7 @@ export const Nav=()=>{
 
                             <Box sx={{width:{xs:"80%",md:"40%"}}}>
                                 <form class="searchForm">
-                                    <input type="text" placeholder='Search by id…' onChange={(e)=>searchInput(e)}/>
+                                    <input type="text" placeholder='Search by movie name....' onChange={(e)=>searchInput(e)}/>
                                     <Box sx={{position:"absolute",top:"10px",left:"10px",color:"red"}}>
                                         <BiSearch/>
                                     </Box>
@@ -131,10 +139,20 @@ export const Nav=()=>{
                                                                 <Box sx={{position:"relative"}}>
                                                                     <Typography 
                                                                         component="img"
-                                                                        src={state.arraySearch.image.original}
+                                                                        src={state.arraySearch.image===null || state.arraySearch.image.length<0? 
+                                                                                ""
+                                                                            :
+                                                                                state.arraySearch.image.original===null ? 
+                                                                                
+                                                                                ""
+                                                                            :
+                                                                                state.arraySearch.image.original   
+                                                                        }
+
+
                                                                     sx={{width:"100%",height:"250px"}}/>
                                                                     <Box sx={{cursor:"pointer",position:"absolute",bottom:"-15px",right:"40px",fontSize:"25px",color:"white",backgroundColor:"red",height:"40px",width:"40px",borderRadius:"50%",display:"flex",alignItems:"center",flexWrap:"wrap",justifyContent:"center"}}>
-                                                                        <BsFillPlayFill onClick={()=>Details(state.arraySearch.id)}/>
+                                                                        <BsFillPlayFill onClick={()=>DetailsSearch()}/>
                                                                     </Box>
                                                                 </Box>
                                                             
@@ -152,7 +170,7 @@ export const Nav=()=>{
                                                                             sx={{fontSize:"14px"}}>
                                                                                 <span style={{color:"orange",paddingRight:"5px"}}><AiFillStar/></span>
                                                                                 
-                                                                                {state.arraySearch.rating.average}<span> / 10</span>
+                                                                                {state.arraySearch.rating.average%1===0 ? state.arraySearch.rating.average : "5"}<span> / 10</span>
                                                                             </Typography>
                                                                         </Box>
 
@@ -166,11 +184,9 @@ export const Nav=()=>{
                                                                     </Box>
                                                                     
                                                                     <Box sx={{height:"150px",paddingTop:"10px"}}>
-                                                                        <Typography
-                                                                            component="p"
-                                                                            sx={{fontSize:"12px",textTransform:"capitalize"}}>   
-                                                                            {state.arraySearch.summary.replace(/<\/?p>/g, "")}
-                                                                        </Typography>
+
+                                                                        {state.arraySearch.summary!==null ? state.arraySearch.summary.replace(/(<([^>]+)>)/ig, "") :""}
+                                                                        
                                                                     </Box>
                                                                 </Box>
                                                             </Box>

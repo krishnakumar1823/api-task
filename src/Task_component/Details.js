@@ -24,7 +24,7 @@ export const  Details=()=>{
                                     <Box sx={{width:{xs:"100%",sm:"50%"},padding:"15px",textAlign:"center"}}>
                                             <Typography
                                                 component="img"
-                                                src={val.image.medium}
+                                                src={val.image.medium!=="" ? val.image.medium:val.image.original}
                                                 sx={{width:"90%",height:"250px",boxShadow:"0px 0px 5px red",borderRadius:"12px"}}>
                                             </Typography>
                                     </Box>
@@ -48,7 +48,7 @@ export const  Details=()=>{
                                                 sx={{color:"black",width:"50%",textAlign:"center"}}>
                                                     <span style={{color:"orange",paddingRight:"5px"}}><AiFillStar/></span>
 
-                                                    {val.rating.average}<span> / 10</span>
+                                                    {val.rating.average!=="" ? val.rating.average:"5"}<span> / 10</span>
                                             </Typography>
                                         </Box>
 
@@ -62,7 +62,7 @@ export const  Details=()=>{
                                             <Typography
                                                 component="h6"
                                                 sx={{color:"black",width:"50%",textAlign:"center"}}>
-                                                    {val.airdate}
+                                                    {typeof(val.airdate)=="string" ? val.airdate:"18-03-2000"}
                                             </Typography>
                                         </Box>
 
@@ -76,7 +76,7 @@ export const  Details=()=>{
                                             <Typography
                                                 component="h6"
                                                 sx={{color:"black",width:"50%",textAlign:"center"}}>
-                                                    {val.season}
+                                                    {val.season%1===0 ? val.season:"1"}
                                             </Typography>
                                         </Box>
                                         
@@ -90,7 +90,7 @@ export const  Details=()=>{
                                             <Typography
                                                 component="h6"
                                                 sx={{color:"black",width:"50%",textAlign:"center"}}>
-                                                    {val.number}
+                                                    {val.number%1===0? val.number :"1"}
                                             </Typography>
                                         </Box>
 
@@ -104,7 +104,7 @@ export const  Details=()=>{
                                             <Typography
                                                 component="h6"
                                                 sx={{color:"black",width:"50%",textAlign:"center"}}>
-                                                    {val.type}
+                                                    {[val.type].length>0 ? val.type :"regular"}
                                             </Typography>
                                         </Box>
                                     </Box>
@@ -113,7 +113,7 @@ export const  Details=()=>{
                                             <Typography
                                                 component="p"
                                                 sx={{color:"black",padding:"20px",fontSize:"14px"}}>
-                                                    {val.summary.replace(/<\/?p>/g, "")}
+                                                    {val.summary!==null ? val.summary.replace(/(<([^>]+)>)/ig, ""):""}
                                             </Typography>
                                         </Box>
                                 </Box>
@@ -122,7 +122,7 @@ export const  Details=()=>{
                                     <Typography
                                         component="img"
                                         src={val.image.original}
-                                        sx={{width:"100%"}}>
+                                        sx={{width:"100%",height:"430px"}}>
                                     </Typography>
                                 </Box>
                             </Box>
